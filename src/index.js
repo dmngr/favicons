@@ -80,7 +80,10 @@ function favicons(source, options = {}, next = undefined) {
           )
         )
       ).then((results) =>
-        toIco(results.map(({ contents }) => contents)).then((buffer) => ({
+        toIco(results.map(({ contents }) => contents), {
+          resize: true,
+          sizes: [16, 32]
+        }).then((buffer) => ({
           name,
           contents: buffer,
         }))
@@ -122,11 +125,11 @@ function favicons(source, options = {}, next = undefined) {
     const platformOptions = µ.General.preparePlatformOptions(platform);
     const icons = Array.isArray(options.icons[platform])
       ? options.icons[platform].reduce((opts, icon) => {
-          // map the selected names to their original configs
-          if (platform in config.icons && icon in config.icons[platform])
-            opts[icon] = config.icons[platform][icon];
-          return opts;
-        }, {})
+        // map the selected names to their original configs
+        if (platform in config.icons && icon in config.icons[platform])
+          opts[icon] = config.icons[platform][icon];
+        return opts;
+      }, {})
       : config.icons[platform];
 
     return Promise.all(
